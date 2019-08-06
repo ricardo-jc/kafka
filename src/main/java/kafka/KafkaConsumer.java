@@ -26,4 +26,13 @@ public class KafkaConsumer implements Serializable {
     public ConsumerRecords<String, String> consume(Duration timeout) {
         return consumer.poll(timeout);
     }
+    public void commitSync() {
+        consumer.commitSync();
+    }
+    public void commitAsync() {
+        consumer.commitAsync();
+    }
+    public void close() {
+        consumer.close();
+    }
 }

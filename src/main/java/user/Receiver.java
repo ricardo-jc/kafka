@@ -11,14 +11,24 @@ public class Receiver {
         KafkaConsumer consumer = new KafkaConsumer();
         consumer.subscribe("user");
         System.out.println("Ready to receive.");
-        while(true){
-            ConsumerRecords<String, String> records = consumer.consume(Duration.ofSeconds(60));
-            if(records == null || records.isEmpty()) {
-                System.out.println("No more message, process terminated.");
-                break;
+        try {
+            while(true) {
+                ConsumerRecords<String, String> records = consumer.consume(Duration.ofSeconds(60));
+                if(records == null || records.isEmpty()) {
+                    System.out.println("No more message, process terminated.");
+                    break;
+                }
+                for(ConsumerRecord<String, String> record:records) {
+                    System.out.println(record.value());
+                }
             }
-            for(ConsumerRecord<String, String> record:records) {
-                System.out.println(record.value());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                consumer.commitSync();
+            } finally {
+                consumer.close();
             }
         }
     }
